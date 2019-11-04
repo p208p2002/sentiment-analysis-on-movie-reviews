@@ -1,2 +1,2 @@
 # sentiment-analysis-on-movie-reviews
-[K](https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews/data)
+[Kaggle](https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews/data)
