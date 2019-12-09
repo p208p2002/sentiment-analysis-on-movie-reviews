@@ -21,11 +21,11 @@ class MR_Data:
                 if(is_train_data):
                     PhraseId,SentenceId,Phrase,Sentiment = row
                     idput_ids = toBertIds(Phrase)
-                    new_row = [PhraseId,SentenceId,Phrase,Sentiment,toBertIds]
+                    new_row = [PhraseId,SentenceId,Phrase,Sentiment,idput_ids]
                 else:
                     PhraseId,SentenceId,Phrase = row
                     idput_ids = toBertIds(Phrase)
-                    new_row = [PhraseId,SentenceId,Phrase,toBertIds]
+                    new_row = [PhraseId,SentenceId,Phrase,idput_ids]
                 new_rows.append(new_row)
             return cls(is_train_data,new_rows)
 
