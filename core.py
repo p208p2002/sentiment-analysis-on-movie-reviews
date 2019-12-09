@@ -2,8 +2,8 @@ import csv
 from transformers import AlbertTokenizer
 
 class MR_Data:
-    def __init__(self, is_train_data, raw_data):
-        self.raw_data = raw_data
+    def __init__(self, is_train_data, data):
+        self.data = data
         self.is_train_data = is_train_data
     
     @classmethod
@@ -31,7 +31,7 @@ class MR_Data:
 
     @property
     def total_topic(self):
-        return len(self.raw_data) 
+        return len(self.data) 
         
 if __name__ == "__main__":
     TrainData = MR_Data.load_data('dataset/train.tsv')
