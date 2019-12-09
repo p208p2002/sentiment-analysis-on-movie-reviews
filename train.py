@@ -1,4 +1,5 @@
-from core import MR_Data,makeTorchDataSet
+from core import MR_Data, makeTorchDataSet, makeTorchDataLoader
 if __name__ == "__main__":
     TrainData = MR_Data.load_data('dataset/train.tsv')
-    makeTorchDataSet(TrainData)
+    TrainDataset = makeTorchDataSet(TrainData)
+    TrainDataLoader = makeTorchDataLoader(TrainDataset)

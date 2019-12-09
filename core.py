@@ -1,7 +1,10 @@
 import csv
 from transformers import AlbertTokenizer
 import torch
-from torch.utils.data import TensorDataset
+from torch.utils.data import TensorDataset, DataLoader
+
+def makeTorchDataLoader(torch_dataset,batch_size = 16):
+    return DataLoader(torch_dataset,batch_size=batch_size,shuffle=True)
 
 def makeTorchDataSet(mr_data_class,is_train_data = True):
     all_input_ids = []
