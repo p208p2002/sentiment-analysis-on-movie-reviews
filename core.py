@@ -28,13 +28,13 @@ class MR_Data:
                     new_row = [PhraseId,SentenceId,Phrase,idput_ids]
                 new_rows.append(new_row)
             return cls(is_train_data,new_rows)
-
+    
     @property
     def total_topic(self):
         return len(self.data) 
         
 if __name__ == "__main__":
-    TrainData = MR_Data.load_data('dataset/train.tsv')
-    # TestData = MR_Data.load_data('dataset/test.tsv')
+    TrainData = MR_Data.load_data('dataset/train.tsv')    
     print('TrainData.total_topic:',TrainData.total_topic)
+    # TestData = MR_Data.load_data('dataset/test.tsv')
     # print('TestData.total_topic:',TestData.total_topic)
