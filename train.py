@@ -5,4 +5,4 @@ if __name__ == "__main__":
     TrainDataset = makeTorchDataSet(TrainData)
     TrainDataLoader = makeTorchDataLoader(TrainDataset)
     model_config = AlbertConfig.from_json_file('albert-large-config.json')
-    model = AlbertForSequenceClassification.from_pretrained('albert-large-pytorch_model.bin')
+    model = AlbertForSequenceClassification.from_pretrained('albert-large-pytorch_model.bin',config = model_config)
