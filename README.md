@@ -8,8 +8,7 @@ using Albert on sentiment analysis
 - [vocab](https://s3.amazonaws.com/models.huggingface.co/bert/albert-large-spiece.model)
 - [model](https://s3.amazonaws.com/models.huggingface.co/bert/albert-large-pytorch_model.bin)
 - [config_file](https://s3.amazonaws.com/models.huggingface.co/bert/albert-large-config.json)
-> no need to download `config_file`
-> or use `download.py` to get all model files we need
+> use `download.py` to get all model files we need
 
 ## Usage
 - `pip install -r requments.txt`
