@@ -14,3 +14,7 @@ using Albert on sentiment analysis
 - `pip install -r requments.txt`
 - `python download.py`
 - `python train.py`
+
+## Env Require
+- python 3.6+
+- pytorch 1.3+
