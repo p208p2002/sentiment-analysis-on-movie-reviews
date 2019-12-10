@@ -19,7 +19,7 @@ if __name__ == "__main__":
     #
     TrainData = MR_Data.load_data('dataset/train.tsv')
     TrainDataset = makeTorchDataSet(TrainData)
-    TrainDataLoader = makeTorchDataLoader(TrainDataset,batch_size=24)
+    TrainDataLoader = makeTorchDataLoader(TrainDataset,batch_size=16)
     model_config = AlbertConfig.from_json_file('albert-large-config.json')
     model = AlbertForSequenceClassification.from_pretrained('albert-large-pytorch_model.bin',config = model_config)
     model.to(device)
@@ -55,3 +55,7 @@ if __name__ == "__main__":
 
             # log
             log("epoch:%2d batch:%4d train_loss:%2.4f train_acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
+    
+    # save model
+    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+    model_to_save.save_pretrained('trained_model')
