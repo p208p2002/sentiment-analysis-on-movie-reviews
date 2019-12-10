@@ -2,6 +2,16 @@ import csv
 from transformers import AlbertTokenizer
 import torch
 from torch.utils.data import TensorDataset, DataLoader
+import sys, os
+
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
 
 def makeTorchDataLoader(torch_dataset,batch_size = 16):
     return DataLoader(torch_dataset,batch_size=batch_size,shuffle=True)
