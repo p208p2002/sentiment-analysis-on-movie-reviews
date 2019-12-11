@@ -33,7 +33,7 @@ if __name__ == "__main__":
     optimizer = AdamW(optimizer_grouped_parameters, lr=5e-6, eps=1e-8)
 
     model.zero_grad()
-    for epoch in range(30):
+    for epoch in range(15):
         running_loss_val = 0.0
         running_acc = 0.0
         for batch_index, batch_dict in enumerate(TrainDataLoader):
@@ -56,6 +56,6 @@ if __name__ == "__main__":
             # log
             log("epoch:%2d batch:%4d train_loss:%2.4f train_acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
     
-    # save model
-    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
-    model_to_save.save_pretrained('trained_model')
+        # save model
+        model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+        model_to_save.save_pretrained('ALSS_e%s_a%S.model'%(str(epoch+1),str(running_acc)))
