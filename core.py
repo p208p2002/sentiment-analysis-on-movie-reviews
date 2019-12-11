@@ -1,20 +1,21 @@
 import csv
 from transformers import AlbertTokenizer
 import torch
-from torch.utils.data import TensorDataset, DataLoader
+from torch.utils.data import TensorDataset, DataLoader, random_split
 import sys, os
+from datetime import datetime
 
 def log(*logs):
     enablePrint()
     print(*logs)
     blockPrint()
 
-def compute_accuracy(y_pred, y_target):
+def computeAccuracy(y_pred, y_target):
     _, y_pred_indices = y_pred.max(dim=1)
     n_correct = torch.eq(y_pred_indices, y_target).sum().item()
     return n_correct / len(y_pred_indices) * 100
 
-def save_model(model,name):
+def saveModel(model,name):
     now = datetime.now()
     base_dir = 'train_models/'
     save_dir = base_dir + now.strftime("%m-%d-%Y_%H-%M-%S_") + name
@@ -57,6 +58,12 @@ def makeTorchDataSet(mr_data_class,is_train_data = True):
         return TensorDataset(torch_input_ids,torch_answer_lables)
 
     return TensorDataset(torch_input_ids)
+
+def splitDataset(full_dataset,split_rate = 0.8):
+    train_size = int(split_rate * len(full_dataset))
+    test_size = len(full_dataset) - train_size
+    train_dataset, test_dataset = torch.utils.data.random_split(full_dataset, [train_size, test_size])
+    return train_dataset, test_dataset
 
 class MR_Data:
     def __init__(self, is_train_data, data):

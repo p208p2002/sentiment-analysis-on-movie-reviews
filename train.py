@@ -1,8 +1,6 @@
-from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint, log, compute_accuracy, save_model
+from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint, log, computeAccuracy, saveModel
 from transformers import AlbertConfig, AlbertForSequenceClassification, AdamW
 import torch
-from datetime import datetime
-import os
 
 def main():
     # setting device
@@ -44,17 +42,18 @@ def main():
                 running_loss_val += (loss_t - running_loss_val) / (batch_index + 1)
 
                 # compute the accuracy
-                acc_t = compute_accuracy(logits, batch_dict[1])
+                acc_t = computeAccuracy(logits, batch_dict[1])
                 running_acc += (acc_t - running_acc) / (batch_index + 1)
 
                 # log
-                log("epoch:%2d batch:%4d train_loss:%2.4f train_acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
+                if(batch_index % 50 == 0):
+                    log("epoch:%2d batch:%4d train_loss:%2.4f train_acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
         
             # save model
-            save_model(model,'ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
+            saveModel(model,'ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
     
     except KeyboardInterrupt:
-        save_model(model,'Interrupt_ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
+        saveModel(model,'Interrupt_ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
 
     except Exception as e:
         print(e)
