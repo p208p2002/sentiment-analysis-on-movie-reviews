@@ -1,6 +1,8 @@
 from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint
 from transformers import AlbertConfig, AlbertForSequenceClassification, AdamW
 import torch
+from datetime import datetime
+import os
 
 def log(*logs):
     enablePrint()
@@ -12,16 +14,24 @@ def compute_accuracy(y_pred, y_target):
     n_correct = torch.eq(y_pred_indices, y_target).sum().item()
     return n_correct / len(y_pred_indices) * 100
 
-if __name__ == "__main__":
-    #
+def save_model(model,name):
+    now = datetime.now()
+    base_dir = 'train_models/'
+    save_dir = base_dir + now.strftime("%m-%d-%Y_%H-%M-%S_") + name
+    os.mkdir(save_dir)
+    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+    model_to_save.save_pretrained(save_dir)
+
+def main():
+    # setting device
     device = torch.device('cuda')
 
     #
     TrainData = MR_Data.load_data('dataset/train.tsv')
     TrainDataset = makeTorchDataSet(TrainData)
     TrainDataLoader = makeTorchDataLoader(TrainDataset,batch_size=16)
-    model_config = AlbertConfig.from_json_file('albert-large-config.json')
-    model = AlbertForSequenceClassification.from_pretrained('albert-large-pytorch_model.bin',config = model_config)
+    model_config = AlbertConfig.from_json_file('model/albert-large-config.json')
+    model = AlbertForSequenceClassification.from_pretrained('model/albert-large-pytorch_model.bin',config = model_config)
     model.to(device)
 
     #
@@ -33,29 +43,39 @@ if __name__ == "__main__":
     optimizer = AdamW(optimizer_grouped_parameters, lr=5e-6, eps=1e-8)
 
     model.zero_grad()
-    for epoch in range(15):
-        running_loss_val = 0.0
-        running_acc = 0.0
-        for batch_index, batch_dict in enumerate(TrainDataLoader):
-            model.train()
-            batch_dict = tuple(t.to(device) for t in batch_dict)
-            outputs = model(batch_dict[0], labels=batch_dict[1])
-            loss, logits = outputs[:2]
-            loss.sum().backward()
-            optimizer.step()
-            model.zero_grad()
 
-            # compute the loss
-            loss_t = loss.item()
-            running_loss_val += (loss_t - running_loss_val) / (batch_index + 1)
+    try:
+        for epoch in range(15):
+            running_loss_val = 0.0
+            running_acc = 0.0
+            for batch_index, batch_dict in enumerate(TrainDataLoader):
+                model.train()
+                batch_dict = tuple(t.to(device) for t in batch_dict)
+                outputs = model(batch_dict[0], labels=batch_dict[1])
+                loss, logits = outputs[:2]
+                loss.sum().backward()
+                optimizer.step()
+                model.zero_grad()
 
-            # compute the accuracy
-            acc_t = compute_accuracy(logits, batch_dict[1])
-            running_acc += (acc_t - running_acc) / (batch_index + 1)
+                # compute the loss
+                loss_t = loss.item()
+                running_loss_val += (loss_t - running_loss_val) / (batch_index + 1)
 
-            # log
-            log("epoch:%2d batch:%4d train_loss:%2.4f train_acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
+                # compute the accuracy
+                acc_t = compute_accuracy(logits, batch_dict[1])
+                running_acc += (acc_t - running_acc) / (batch_index + 1)
+
+                # log
+                log("epoch:%2d batch:%4d train_loss:%2.4f train_acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
+        
+            # save model
+            save_model(model,'ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
     
-        # save model
-        model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
-        model_to_save.save_pretrained('ALSS_e%s_a%S.model'%(str(epoch+1),str(running_acc)))
+    except KeyboardInterrupt:
+        save_model(model,'Interrupt_ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
+
+    except Exception as e:
+        print(e)
+    
+if __name__ == "__main__":
+    main()

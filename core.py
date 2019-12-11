@@ -48,7 +48,7 @@ class MR_Data:
     
     @classmethod
     def load_data(cls, path, is_train_data = True):
-        tokenizer = AlbertTokenizer.from_pretrained('albert-large-spiece.model')
+        tokenizer = AlbertTokenizer.from_pretrained('model/albert-large-spiece.model')
         def toBertIds(q_input):
             return tokenizer.build_inputs_with_special_tokens(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(q_input)))
         with open(path) as f:
