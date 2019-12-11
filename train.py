@@ -1,26 +1,8 @@
-from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint
+from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint, log, compute_accuracy, save_model
 from transformers import AlbertConfig, AlbertForSequenceClassification, AdamW
 import torch
 from datetime import datetime
 import os
-
-def log(*logs):
-    enablePrint()
-    print(*logs)
-    blockPrint()
-
-def compute_accuracy(y_pred, y_target):
-    _, y_pred_indices = y_pred.max(dim=1)
-    n_correct = torch.eq(y_pred_indices, y_target).sum().item()
-    return n_correct / len(y_pred_indices) * 100
-
-def save_model(model,name):
-    now = datetime.now()
-    base_dir = 'train_models/'
-    save_dir = base_dir + now.strftime("%m-%d-%Y_%H-%M-%S_") + name
-    os.mkdir(save_dir)
-    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
-    model_to_save.save_pretrained(save_dir)
 
 def main():
     # setting device

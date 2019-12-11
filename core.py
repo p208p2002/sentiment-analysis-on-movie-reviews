@@ -4,6 +4,24 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 import sys, os
 
+def log(*logs):
+    enablePrint()
+    print(*logs)
+    blockPrint()
+
+def compute_accuracy(y_pred, y_target):
+    _, y_pred_indices = y_pred.max(dim=1)
+    n_correct = torch.eq(y_pred_indices, y_target).sum().item()
+    return n_correct / len(y_pred_indices) * 100
+
+def save_model(model,name):
+    now = datetime.now()
+    base_dir = 'train_models/'
+    save_dir = base_dir + now.strftime("%m-%d-%Y_%H-%M-%S_") + name
+    os.mkdir(save_dir)
+    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+    model_to_save.save_pretrained(save_dir)
+
 # Disable
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
@@ -11,7 +29,6 @@ def blockPrint():
 # Restore
 def enablePrint():
     sys.stdout = sys.__stdout__
-
 
 def makeTorchDataLoader(torch_dataset,batch_size = 16):
     return DataLoader(torch_dataset,batch_size=batch_size,shuffle=True)
