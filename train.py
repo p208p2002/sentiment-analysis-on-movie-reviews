@@ -70,7 +70,8 @@ def main():
                 running_acc += (acc_t - running_acc) / (batch_index + 1)
 
                 # log
-                log(">> TEST << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
+                if(batch_index % 50 == 0):
+                    log(">> TEST << epoch:%2d batch:%4d loss:%2.4f acc:%3.4f"%(epoch+1, batch_index+1, running_loss_val, running_acc))
                     
             # save model
             saveModel(model,'ALSS_e%s_a%s'%(str(epoch+1),str(running_acc)))
