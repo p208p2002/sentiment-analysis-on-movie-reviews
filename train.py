@@ -1,4 +1,4 @@
-from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint, log, computeAccuracy, saveModel
+from core import MR_Data, makeTorchDataSet, makeTorchDataLoader, blockPrint, enablePrint, log, computeAccuracy, saveModel, splitDataset
 from transformers import AlbertConfig, AlbertForSequenceClassification, AdamW
 import torch
 
@@ -7,11 +7,12 @@ def main():
     device = torch.device('cuda')
 
     #
-    TrainData = MR_Data.load_data('dataset/train.tsv')
-    TrainDataset = makeTorchDataSet(TrainData)
-    TrainDataLoader = makeTorchDataLoader(TrainDataset,batch_size=16)
+    FullData = MR_Data.load_data('dataset/train.tsv')
+    FullDataset = makeTorchDataSet(FullData)
+    TrainDataset, TestDataset =  splitDataset(FullDataset, 0.9)
+    TrainDataLoader = makeTorchDataLoader(TrainDataset, batch_size=16)
     model_config = AlbertConfig.from_json_file('model/albert-large-config.json')
-    model = AlbertForSequenceClassification.from_pretrained('model/albert-large-pytorch_model.bin',config = model_config)
+    model = AlbertForSequenceClassification.from_pretrained('model/albert-large-pytorch_model.bin', config = model_config)
     model.to(device)
 
     #
