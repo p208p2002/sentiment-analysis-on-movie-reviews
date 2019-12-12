@@ -36,7 +36,7 @@ def main():
         for i in range(len(batch_dict)):
             p_id = phrase_ids[i].item()
             s_level = np.argmax(outputs[i])
-            log("phrase_id",p_id,"segment_level",s_level)
+            # log("phrase_id",p_id,"segment_level",s_level)
             f.write(str(p_id) + ',' + str(s_level) + '\n')
     
     f.close()
