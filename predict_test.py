@@ -23,7 +23,7 @@ def main():
 
     f = open('submission.csv','w',encoding='utf-8')
     f.write('PhraseId,Sentiment\n')
-
+    log("please waiting for predict ....")
     for batch_index, batch_dict in enumerate(TestDataLoader):
         batch_dict = tuple(t.to(device) for t in batch_dict)
         input_ids,phrase_ids = batch_dict
@@ -33,7 +33,7 @@ def main():
         outputs = outputs.detach().numpy()
         # log(outputs)
         
-        for i in range(len(batch_dict)):
+        for i in range(len(outputs)):
             p_id = phrase_ids[i].item()
             s_level = np.argmax(outputs[i])
             # log("phrase_id",p_id,"segment_level",s_level)
