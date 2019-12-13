@@ -1,5 +1,7 @@
 # sentiment-analysis-on-movie-reviews
 using Albert on sentiment analysis
+![score](https://raw.githubusercontent.com/p208p2002/sentiment-analysis-on-movie-reviews/master/score.png)
+> Rank 9/2667 of the Public Leaderboard
 
 ## Dataset
 [Kaggle](https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews/data)
