@@ -16,6 +16,7 @@ using Albert on sentiment analysis
 ## Usage
 - `pip install -r requments.txt`
 - `python download.py`
+> `download.py` is under path "model"
 - `python train.py`
 
 ## Env Require
