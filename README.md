@@ -1,6 +1,5 @@
 # sentiment-analysis-on-movie-reviews
-using Albert on sentiment analysis
-[https://arxiv.org/abs/1909.11942](https://arxiv.org/abs/1909.11942)
+using [ALBERT](https://arxiv.org/abs/1909.11942) on sentiment analysis
 ![score](https://raw.githubusercontent.com/p208p2002/sentiment-analysis-on-movie-reviews/master/score.png)
 > Rank 9/2667 of the Public Leaderboard
 
